@@ -6,6 +6,10 @@ class ActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWeb = screenWidth > 768;
+    final maxWidth = isWeb ? 900.0 : double.infinity;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Activity'),
@@ -16,25 +20,30 @@ class ActivityScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            const TabBar(
-              tabs: [
-                Tab(text: 'Following'),
-                Tab(text: 'You'),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                const TabBar(
+                  tabs: [
+                    Tab(text: 'Following'),
+                    Tab(text: 'You'),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      _buildFollowingTab(),
+                      _buildYouTab(),
+                    ],
+                  ),
+                ),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _buildFollowingTab(),
-                  _buildYouTab(),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -43,25 +52,39 @@ class ActivityScreen extends StatelessWidget {
   Widget _buildFollowingTab() {
     final activities = [
       {
-        'username': 'johndoe',
+        'username': 'rahul_sharma',
         'action': 'liked your photo',
         'time': '2 hours ago',
         'image': 'https://picsum.photos/50/50?random=1',
-        'profile': 'https://i.pravatar.cc/150?img=1',
+        'profile': 'https://i.pravatar.cc/150?img=12',
       },
       {
-        'username': 'janedoe',
+        'username': 'priya_patel',
         'action': 'commented on your photo',
         'time': '5 hours ago',
         'image': 'https://picsum.photos/50/50?random=2',
-        'profile': 'https://i.pravatar.cc/150?img=2',
+        'profile': 'https://i.pravatar.cc/150?img=47',
       },
       {
-        'username': 'traveler',
+        'username': 'arjun_kumar',
         'action': 'started following you',
         'time': '1 day ago',
         'image': null,
-        'profile': 'https://i.pravatar.cc/150?img=3',
+        'profile': 'https://i.pravatar.cc/150?img=33',
+      },
+      {
+        'username': 'ananya_singh',
+        'action': 'liked your photo',
+        'time': '3 hours ago',
+        'image': 'https://picsum.photos/50/50?random=4',
+        'profile': 'https://i.pravatar.cc/150?img=45',
+      },
+      {
+        'username': 'vikram_mehta',
+        'action': 'commented on your photo',
+        'time': '6 hours ago',
+        'image': 'https://picsum.photos/50/50?random=5',
+        'profile': 'https://i.pravatar.cc/150?img=15',
       },
     ];
 

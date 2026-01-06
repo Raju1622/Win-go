@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/home_screen.dart';
-import 'screens/search_screen.dart';
-import 'screens/add_post_screen.dart';
-import 'screens/activity_screen.dart';
-import 'screens/profile_screen.dart';
+import 'screens/home_screen_betting.dart';
+import 'screens/invest_screen.dart';
+import 'screens/account_screen.dart';
 import 'screens/login_screen.dart';
 import 'providers/auth_provider.dart';
 
@@ -20,19 +18,30 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => AuthProvider(),
       child: MaterialApp(
-        title: 'Instagram Clone',
+        title: 'TATA POWER - Betting Platform',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.white,
+          primarySwatch: Colors.green,
+          primaryColor: const Color(0xFF2E7D32),
+          scaffoldBackgroundColor: const Color(0xFFF5F5F5),
           appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.white,
+            backgroundColor: Color(0xFF2E7D32),
             elevation: 0,
-            iconTheme: IconThemeData(color: Colors.black),
+            iconTheme: IconThemeData(color: Colors.white),
             titleTextStyle: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2E7D32),
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           ),
         ),
@@ -70,11 +79,9 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeScreen(),
-    const SearchScreen(),
-    const AddPostScreen(),
-    const ActivityScreen(),
-    const ProfileScreen(),
+    const HomeScreenBetting(),
+    const InvestScreen(),
+    const AccountScreen(),
   ];
 
   @override
@@ -89,28 +96,21 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.black,
+        selectedItemColor: const Color(0xFF2E7D32),
         unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.white,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Activity',
+            icon: Icon(Icons.trending_up),
+            label: 'Invest',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Account',
           ),
         ],
       ),

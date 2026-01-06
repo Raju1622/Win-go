@@ -5,6 +5,10 @@ class AddPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWeb = screenWidth > 768;
+    final maxWidth = isWeb ? 800.0 : double.infinity;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Post'),
@@ -14,7 +18,7 @@ class AddPostScreen extends StatelessWidget {
             child: const Text(
               'Share',
               style: TextStyle(
-                color: Colors.blue,
+                color: Color(0xFFE1306C),
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
@@ -23,54 +27,60 @@ class AddPostScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add_photo_alternate_outlined,
-              size: 80,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Share Photos and Videos',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[700],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'When you share photos and videos, they\'ll appear on your profile.',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              onPressed: () {
-                // In a real app, this would open image picker
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Image picker would open here'),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.photo_library),
-              label: const Text('Select from Gallery'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.add_photo_alternate_outlined,
+                  size: 80,
+                  color: Colors.grey[400],
                 ),
-              ),
+                const SizedBox(height: 20),
+                Text(
+                  'Share Photos and Videos',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'When you share photos and videos, they\'ll appear on your profile.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    // In a real app, this would open image picker
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Image picker would open here'),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.photo_library),
+                  label: const Text('Select from Gallery'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE1306C),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    elevation: 0,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

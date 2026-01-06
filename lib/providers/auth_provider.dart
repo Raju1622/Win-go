@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/user_model.dart';
+import 'dart:core';
 
 class AuthProvider with ChangeNotifier {
   User? _currentUser;
@@ -11,14 +12,20 @@ class AuthProvider with ChangeNotifier {
   void login(String username, String password) {
     // Simulate login - in real app, this would call an API
     _currentUser = User(
-      id: '1',
+      id: '518502',
       username: username,
-      name: username,
-      bio: 'This is my bio',
-      profileImageUrl: 'https://i.pravatar.cc/150?img=$username.length',
-      followers: 1200,
-      following: 500,
-      posts: 45,
+      name: username.toUpperCase(),
+      phone: '97******64',
+      profileImageUrl: 'https://i.pravatar.cc/150?img=${username.length}',
+      balance: 30.0,
+      totalRecharge: 30.0,
+      totalWithdrawal: 0.0,
+      productRevenue: 0.0,
+      myOrders: 0,
+      vipLevel: 0,
+      vipProgress: 0.0,
+      vipTarget: 330.0,
+      hasBankCard: false,
     );
     _isAuthenticated = true;
     notifyListeners();
@@ -27,14 +34,20 @@ class AuthProvider with ChangeNotifier {
   void signup(String username, String email, String password) {
     // Simulate signup - in real app, this would call an API
     _currentUser = User(
-      id: '1',
+      id: '${DateTime.now().millisecondsSinceEpoch}',
       username: username,
-      name: username,
-      bio: 'Welcome to my profile',
-      profileImageUrl: 'https://i.pravatar.cc/150?img=$username.length',
-      followers: 0,
-      following: 0,
-      posts: 0,
+      name: username.toUpperCase(),
+      phone: '97******64',
+      profileImageUrl: 'https://i.pravatar.cc/150?img=${username.length}',
+      balance: 0.0,
+      totalRecharge: 0.0,
+      totalWithdrawal: 0.0,
+      productRevenue: 0.0,
+      myOrders: 0,
+      vipLevel: 0,
+      vipProgress: 0.0,
+      vipTarget: 330.0,
+      hasBankCard: false,
     );
     _isAuthenticated = true;
     notifyListeners();

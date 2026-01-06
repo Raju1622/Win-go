@@ -40,15 +40,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWeb = screenWidth > 768;
+    final maxWidth = isWeb ? 600.0 : double.infinity;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Instagram',
+          'InstaIndia',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Billabong',
             letterSpacing: 1.2,
+            color: Color(0xFFE1306C),
           ),
         ),
         actions: [
@@ -62,171 +66,199 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 1));
-          setState(() {
-            _posts.clear();
-            _posts.addAll(PostService.getPosts());
-          });
-        },
-        child: ListView.builder(
-          itemCount: _posts.length,
-          itemBuilder: (context, index) {
-            final post = _posts[index];
-            return _buildPostCard(post, index);
-          },
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await Future.delayed(const Duration(seconds: 1));
+              setState(() {
+                _posts.clear();
+                _posts.addAll(PostService.getPosts());
+              });
+            },
+            child: ListView.builder(
+              itemCount: _posts.length,
+              itemBuilder: (context, index) {
+                final post = _posts[index];
+                return _buildPostCard(post, index);
+              },
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPostCard(Post post, int index) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Post Header
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: CachedNetworkImageProvider(
-                  post.userProfileImageUrl,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      post.username,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: () {},
-              ),
-            ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
-        ),
-        // Post Image
-        CachedNetworkImage(
-          imageUrl: post.imageUrl,
-          width: double.infinity,
-          height: 400,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Container(
-            height: 400,
-            color: Colors.grey[300],
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          errorWidget: (context, url, error) => Container(
-            height: 400,
-            color: Colors.grey[300],
-            child: const Icon(Icons.error),
-          ),
-        ),
-        // Post Actions
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  post.isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: post.isLiked ? Colors.red : Colors.black,
-                ),
-                onPressed: () => _toggleLike(index),
-              ),
-              IconButton(
-                icon: const Icon(Icons.chat_bubble_outline),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.send_outlined),
-                onPressed: () {},
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.bookmark_border),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-        // Likes Count
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            '${post.likes} likes',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-        ),
-        const SizedBox(height: 4),
-        // Caption
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: RichText(
-            text: TextSpan(
-              style: const TextStyle(color: Colors.black),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Post Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
               children: [
-                TextSpan(
-                  text: '${post.username} ',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                CircleAvatar(
+                  radius: 22,
+                  backgroundImage: CachedNetworkImageProvider(
+                    post.userProfileImageUrl,
+                  ),
                 ),
-                TextSpan(text: post.caption),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        post.username,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () {},
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
               ],
             ),
           ),
-        ),
-        const SizedBox(height: 4),
-        // View Comments
-        if (post.comments.isNotEmpty)
+          // Post Image
+          ClipRRect(
+            borderRadius: BorderRadius.circular(0),
+            child: CachedNetworkImage(
+              imageUrl: post.imageUrl,
+              width: double.infinity,
+              height: 400,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                height: 400,
+                color: Colors.grey[200],
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFFE1306C),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: 400,
+                color: Colors.grey[200],
+                child: const Icon(Icons.error, color: Colors.grey),
+              ),
+            ),
+          ),
+          // Post Actions
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    post.isLiked ? Icons.favorite : Icons.favorite_border,
+                    color:
+                        post.isLiked ? const Color(0xFFE1306C) : Colors.black,
+                    size: 28,
+                  ),
+                  onPressed: () => _toggleLike(index),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.chat_bubble_outline, size: 28),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.send_outlined, size: 28),
+                  onPressed: () {},
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.bookmark_border, size: 28),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+          // Likes Count
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            child: Text(
+              '${post.likes} likes',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
               ),
-              child: Text(
-                'View all ${post.comments.length} comments',
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 6),
+          // Caption
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 14),
+                children: [
+                  TextSpan(
+                    text: '${post.username} ',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(text: post.caption),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          // View Comments
+          if (post.comments.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  'View all ${post.comments.length} comments',
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ),
-          ),
-        // Time Ago
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            _getTimeAgo(post.timestamp),
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
+          // Time Ago
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Text(
+              _getTimeAgo(post.timestamp),
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-      ],
+        ],
+      ),
     );
   }
 }

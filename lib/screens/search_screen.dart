@@ -11,14 +11,18 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> _suggestions = [
-    'johndoe',
-    'janedoe',
-    'traveler',
-    'foodie',
-    'photographer',
-    'artist',
-    'developer',
-    'designer',
+    'rahul_sharma',
+    'priya_patel',
+    'arjun_kumar',
+    'ananya_singh',
+    'vikram_mehta',
+    'kavya_reddy',
+    'rohan_gupta',
+    'neha_jain',
+    'aditya_malhotra',
+    'sneha_kapoor',
+    'rajesh_yadav',
+    'divya_sharma',
   ];
 
   @override
@@ -37,10 +41,15 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWeb = screenWidth > 768;
+    final maxWidth = isWeb ? 1200.0 : double.infinity;
+
     return Scaffold(
       appBar: AppBar(
         title: Container(
           height: 40,
+          constraints: BoxConstraints(maxWidth: isWeb ? 600 : double.infinity),
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
@@ -57,9 +66,14 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      body: _searchController.text.isEmpty
-          ? _buildExploreGrid()
-          : _buildSearchResults(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: _searchController.text.isEmpty
+              ? _buildExploreGrid()
+              : _buildSearchResults(),
+        ),
+      ),
     );
   }
 
@@ -112,7 +126,10 @@ class _SearchScreenState extends State<SearchScreen> {
             onPressed: () {},
             child: const Text(
               'Follow',
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(
+                color: Color(0xFFE1306C),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         );
