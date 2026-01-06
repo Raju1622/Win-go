@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 60),
                       // Instagram Logo
                       const Text(
-                        'TATA POWER',
+                        'Indianges',
                         style: TextStyle(
                           fontSize: 48,
                           fontWeight: FontWeight.bold,

@@ -70,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       const SizedBox(height: 20),
                       const Text(
-                        'TATA POWER',
+                        'Indianges',
                         style: TextStyle(
                           fontSize: 48,
                           fontWeight: FontWeight.bold,
