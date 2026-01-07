@@ -4,6 +4,7 @@ import '../models/investment_model.dart';
 import '../models/purchased_investment.dart';
 import '../services/investment_service.dart';
 import '../providers/auth_provider.dart';
+import 'buy_investment_screen.dart';
 
 class InvestScreen extends StatefulWidget {
   const InvestScreen({super.key});
@@ -103,6 +104,7 @@ class _InvestScreenState extends State<InvestScreen>
 
   Widget _buildPlanList(List<InvestmentPlan> plans) {
     return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
       itemCount: plans.length,
       itemBuilder: (context, index) {
@@ -114,7 +116,6 @@ class _InvestScreenState extends State<InvestScreen>
   Widget _buildPlanCard(InvestmentPlan plan) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
-        final user = authProvider.currentUser;
         final isPurchased = authProvider.hasPurchasedInvestment(plan.id);
         final purchasedInvestment =
             authProvider.getPurchasedInvestment(plan.id);
@@ -193,9 +194,15 @@ class _InvestScreenState extends State<InvestScreen>
                       )
                     else
                       ElevatedButton(
-                        onPressed: user != null && user.balance >= plan.price
-                            ? () => _showBuyDialog(context, plan, authProvider)
-                            : null,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  BuyInvestmentScreen(plan: plan),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: const Color(0xFF2E7D32),
@@ -310,76 +317,6 @@ class _InvestScreenState extends State<InvestScreen>
           ),
         );
       },
-    );
-  }
-
-  void _showBuyDialog(
-      BuildContext context, InvestmentPlan plan, AuthProvider authProvider) {
-    final user = authProvider.currentUser;
-    if (user == null) return;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Purchase'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Plan: ${plan.name}'),
-            const SizedBox(height: 8),
-            Text('Price: ₹${plan.price.toStringAsFixed(2)}'),
-            const SizedBox(height: 8),
-            Text('Your Balance: ₹${user.balance.toStringAsFixed(2)}'),
-            const SizedBox(height: 8),
-            if (user.balance < plan.price)
-              const Text(
-                'Insufficient balance!',
-                style: TextStyle(color: Colors.red),
-              ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              try {
-                authProvider.buyInvestment(
-                  planId: plan.id,
-                  planName: plan.name,
-                  planType: plan.type,
-                  price: plan.price,
-                  revenueDays: plan.revenueDays,
-                  dailyEarnings: plan.dailyEarnings,
-                  totalRevenue: plan.totalRevenue,
-                );
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Investment purchased successfully!'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-              } catch (e) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(e.toString()),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2E7D32),
-            ),
-            child: const Text('Buy'),
-          ),
-        ],
-      ),
     );
   }
 

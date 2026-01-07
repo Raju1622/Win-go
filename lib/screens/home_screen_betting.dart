@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import 'recharge_screen.dart';
 
 class HomeScreenBetting extends StatelessWidget {
   const HomeScreenBetting({super.key});
@@ -13,6 +14,7 @@ class HomeScreenBetting extends StatelessWidget {
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
               // Header
@@ -132,12 +134,22 @@ class HomeScreenBetting extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: _buildActionCard(
-                        'Recharge',
-                        '₹${user?.balance.toStringAsFixed(2) ?? '0.00'}',
-                        Icons.account_balance_wallet,
-                        const Color(0xFFE8F5E9),
-                        const Color(0xFF2E7D32),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RechargeScreen(),
+                            ),
+                          );
+                        },
+                        child: _buildActionCard(
+                          'Recharge',
+                          '₹${user?.balance.toStringAsFixed(2) ?? '0.00'}',
+                          Icons.account_balance_wallet,
+                          const Color(0xFFE8F5E9),
+                          const Color(0xFF2E7D32),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
